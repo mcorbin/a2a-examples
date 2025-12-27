@@ -7,6 +7,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import set_tracer_provider
 from agents.otel import configure
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 configure("architect")
 
@@ -14,7 +15,7 @@ configure("architect")
 Agent.instrument_all()
 
 system_prompt = dedent("""
-You are a software architect whose mission is to translate product requirements to implementation plans.
+You are a software architect whose mission is to translate product requirements to implementation plans, using Golang.
 The instructions should be programming language agnostic, your focus should be on architecture patterns, API structures, design patterns, and system components.
 
 Provide clear, detailed implementation plans that developers can use to build features.

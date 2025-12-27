@@ -5,6 +5,8 @@ import os
 from strands.multiagent.a2a import A2AServer
 from strands_tools.a2a_client import A2AClientToolProvider
 from agents.otel import configure
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+import uvicorn
 
 configure("orchestrator")
 
@@ -60,5 +62,8 @@ a2a_server = A2AServer(
     agent=orchestrator_agent,
     port=9000,
 )
+app = a2a_server.to_fastapi_app()
+FastAPIInstrumentor.instrument_app(app)
 
-a2a_server.serve()
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=9000)

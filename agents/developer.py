@@ -4,6 +4,8 @@ from strands.models.anthropic import AnthropicModel
 import os
 from strands.multiagent.a2a import A2AServer
 from agents.otel import configure
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+import uvicorn
 
 configure("developer")
 
@@ -60,5 +62,8 @@ a2a_server = A2AServer(
     agent=developer_agent,
     port=8001,
 )
+app = a2a_server.to_fastapi_app()
+FastAPIInstrumentor.instrument_app(app)
 
-a2a_server.serve()
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001)

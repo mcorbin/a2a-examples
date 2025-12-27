@@ -8,7 +8,6 @@ import os
 
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
-HTTPXClientInstrumentor().instrument()
 
 os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:4318"
 
@@ -22,3 +21,6 @@ def configure(service_name: str) -> None:
     tracer_provider.add_span_processor(span_processor)
 
     set_tracer_provider(tracer_provider)
+
+
+HTTPXClientInstrumentor().instrument()

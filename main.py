@@ -27,7 +27,7 @@ async def run(instructions: str):
             agent_card = await resolver.get_agent_card()
             config = ClientConfig(
                 httpx_client=httpx_client,
-                streaming=True,
+                streaming=False,
             )
             factory = ClientFactory(config)
             client = factory.create(agent_card)
@@ -43,43 +43,43 @@ async def run(instructions: str):
                 parts=[Part(TextPart(kind="text", text=instructions))],
             )
 
-            # Send to orchestrator and stream responses
+            # Send to orchestrator and get response
             print("Starting orchestrated multi-agent workflow...\n")
+
+            # Send message and get response (non-streaming returns single response)
+            response = None
+            async for msg in client.send_message(message):
+                # Handle different response types
+                if isinstance(msg, Message):
+                    response = msg
+                elif isinstance(msg, tuple) and len(msg) == 2:
+                    task, update_event = msg
+                    print(f"Task: {task.model_dump_json(exclude_none=True, indent=2)}")
+                    if update_event:
+                        print(f"Update: {update_event.model_dump_json(exclude_none=True, indent=2)}")
+                    # For non-streaming, we expect a final Message response
+                    continue
+
+            # Print the response
+            if response:
+                print(response.model_dump_json(exclude_none=True, indent=2))
 
             # Collect all text content
             full_text_content = []
+            if response and response.parts:
+                for part in response.parts:
+                    # Get the part data as dictionary
+                    part_data = (
+                        part.model_dump()
+                        if hasattr(part, "model_dump")
+                        else part.__dict__
+                    )
 
-            async for event in client.send_message(message):
-                if isinstance(event, Message):
-                    print(event.model_dump_json(exclude_none=True, indent=2))
-                    # Extract text content from message parts
-                    if event.parts:
-                        for part in event.parts:
-                            # Get the part data as dictionary
-                            part_data = (
-                                part.model_dump()
-                                if hasattr(part, "model_dump")
-                                else part.__dict__
-                            )
-
-                            # Extract text from parts with kind="text"
-                            if (
-                                isinstance(part_data, dict)
-                                and part_data.get("kind") == "text"
-                            ):
-                                text_content = part_data.get("text", "")
-                                if text_content:
-                                    full_text_content.append(text_content)
-                elif isinstance(event, tuple) and len(event) == 2:
-                    task, update_event = event
-                    print(f"Task: {task.model_dump_json(exclude_none=True, indent=2)}")
-                    if update_event:
-                        print(
-                            f"Update: {update_event.model_dump_json(exclude_none=True, indent=2)}"
-                        )
-                else:
-                    # Fallback for other response types
-                    print(f"Response: {str(event)}")
+                    # Extract text from parts with kind="text"
+                    if isinstance(part_data, dict) and part_data.get("kind") == "text":
+                        text_content = part_data.get("text", "")
+                        if text_content:
+                            full_text_content.append(text_content)
 
             print(f"\n\n{'=' * 80}")
             print("Multi-agent workflow completed!")
