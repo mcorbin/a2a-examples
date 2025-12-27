@@ -4,6 +4,9 @@ from strands.models.anthropic import AnthropicModel
 import os
 from strands.multiagent.a2a import A2AServer
 from strands_tools.a2a_client import A2AClientToolProvider
+from agents.otel import configure
+
+configure()
 
 system_prompt = dedent("""
 You are an orchestrator agent that coordinates multiple specialized agents to complete software development tasks.

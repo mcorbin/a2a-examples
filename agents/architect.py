@@ -2,6 +2,17 @@ from pydantic_ai import Agent
 from textwrap import dedent
 import uvicorn
 
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.trace import set_tracer_provider
+from agents.otel import configure
+
+configure()
+
+
+Agent.instrument_all()
+
 system_prompt = dedent("""
 You are a software architect whose mission is to translate product requirements to implementation plans.
 The instructions should be programming language agnostic, your focus should be on architecture patterns, API structures, design patterns, and system components.

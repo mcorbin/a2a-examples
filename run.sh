@@ -11,12 +11,12 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Run all specialized agents in background
-python agents/architect.py &
-python agents/developer.py &
-python agents/reviewer.py &
+python -m agents.architect &
+python -m agents.developer &
+python -m agents.reviewer &
 
 # Run orchestrator agent
-python agents/orchestrator.py &
+python -m agents.orchestrator &
 
 # Wait for all background processes
 wait

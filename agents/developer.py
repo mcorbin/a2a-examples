@@ -3,6 +3,9 @@ from textwrap import dedent
 from strands.models.anthropic import AnthropicModel
 import os
 from strands.multiagent.a2a import A2AServer
+from agents.otel import configure
+
+configure()
 
 system_prompt = dedent("""
 You are a coding agent responsible for building features.

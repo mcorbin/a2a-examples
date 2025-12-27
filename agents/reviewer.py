@@ -3,6 +3,9 @@ from textwrap import dedent
 from strands.models.anthropic import AnthropicModel
 import os
 from strands.multiagent.a2a import A2AServer
+from agents.otel import configure
+
+configure()
 
 system_prompt = dedent("""
 You are an agent specialized in code reviews.
@@ -48,6 +51,7 @@ reviewer_agent = Agent(
     description="An agent specialized in code reviews",
     tools=[read_file],
     system_prompt=system_prompt,
+    model=model,
 )
 a2a_server = A2AServer(agent=reviewer_agent, port=8002)
 
