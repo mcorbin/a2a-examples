@@ -1,0 +1,13 @@
+[project]
+name = "a2a-examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "a2a-sdk>=0.3.22",
+    "httpx>=0.28.1",
+    "pydantic-ai-slim[anthropic]>=1.39.0",
+    "strands-agents[a2a,anthropic]>=1.20.0",
+    "uvicorn>=0.40.0",
+]

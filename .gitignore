@@ -1,0 +1,6 @@
+.venv
+__pycache__
+secrets.env
+*.db
+.claude
+.mypy_cache
