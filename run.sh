@@ -10,10 +10,13 @@ cleanup() {
 # Set up trap to catch Ctrl+C (SIGINT) and SIGTERM
 trap cleanup SIGINT SIGTERM
 
-# Run all commands in background
+# Run all specialized agents in background
 python agents/architect.py &
 python agents/developer.py &
 python agents/reviewer.py &
+
+# Run orchestrator agent
+python agents/orchestrator.py &
 
 # Wait for all background processes
 wait

@@ -36,7 +36,7 @@ model = AnthropicModel(
         "api_key": os.environ["ANTHROPIC_API_KEY"],
     },
     # **model_config
-    max_tokens=1028,
+    max_tokens=5000,
     model_id="claude-haiku-4-5-20251001",
     params={
         "temperature": 0,

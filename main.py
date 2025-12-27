@@ -10,31 +10,32 @@ from a2a.types import Part
 
 
 async def run(instructions: str):
-    async with httpx.AsyncClient(timeout=10) as httpx_client:
-        # Configure A2A client
+    async with httpx.AsyncClient(timeout=120) as httpx_client:
+        # Configure A2A client for orchestrator
         resolver = A2ACardResolver(
-            httpx_client=httpx_client, base_url="http://localhost:8000"
+            httpx_client=httpx_client, base_url="http://localhost:9000"
         )
         agent_card = await resolver.get_agent_card()
         config = ClientConfig(
             httpx_client=httpx_client,
-            streaming=True,  # Use streaming mode
+            streaming=True,
         )
         factory = ClientFactory(config)
         client = factory.create(agent_card)
+
         print(f"\n{'=' * 80}")
         print(f"Instruction: {instructions}")
         print(f"{'=' * 80}\n")
 
-        # Create message for the architect
+        # Create message for the orchestrator
         message = Message(
             message_id=str(uuid4()),
             role=Role.user,
             parts=[Part(TextPart(kind="text", text=instructions))],
         )
 
-        # Send to architect and stream responses from all agents
-        print("Starting autonomous multi-agent workflow...\n")
+        # Send to orchestrator and stream responses
+        print("Starting orchestrated multi-agent workflow...\n")
         async for event in client.send_message(message):
             if isinstance(event, Message):
                 print(event.model_dump_json(exclude_none=True, indent=2))
