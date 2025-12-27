@@ -8,7 +8,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import set_tracer_provider
 from agents.otel import configure
 
-configure()
+configure("architect")
 
 
 Agent.instrument_all()

@@ -12,7 +12,7 @@ from agents.otel import configure
 from opentelemetry import trace
 from agents.otel import configure
 
-configure()
+configure("main file")
 
 tracer = trace.get_tracer("main.py")
 
@@ -55,39 +55,21 @@ async def run(instructions: str):
                     # Extract text content from message parts
                     if event.parts:
                         for part in event.parts:
-                            # Try to get the text content from the part's data
+                            # Get the part data as dictionary
                             part_data = (
                                 part.model_dump()
                                 if hasattr(part, "model_dump")
                                 else part.__dict__
                             )
 
-                            print(f"\n[DEBUG] Part data: {part_data}\n")
-
-                            # Look for text in various possible locations
-                            if isinstance(part_data, dict):
-                                # Check for direct text field
-                                if "text" in part_data and part_data["text"]:
-                                    full_text_content.append(part_data["text"])
-                                    print(
-                                        f"[DEBUG] Added text from direct field: {part_data['text'][:50]}..."
-                                    )
-                                # Check for nested text_part
-                                elif (
-                                    "text_part" in part_data
-                                    and part_data["text_part"]
-                                    and "text" in part_data["text_part"]
-                                ):
-                                    full_text_content.append(
-                                        part_data["text_part"]["text"]
-                                    )
-                                    print(
-                                        f"[DEBUG] Added text from text_part: {part_data['text_part']['text'][:50]}..."
-                                    )
-                                else:
-                                    print(
-                                        f"[DEBUG] No text found in part_data keys: {list(part_data.keys())}"
-                                    )
+                            # Extract text from parts with kind="text"
+                            if (
+                                isinstance(part_data, dict)
+                                and part_data.get("kind") == "text"
+                            ):
+                                text_content = part_data.get("text", "")
+                                if text_content:
+                                    full_text_content.append(text_content)
                 elif isinstance(event, tuple) and len(event) == 2:
                     task, update_event = event
                     print(f"Task: {task.model_dump_json(exclude_none=True, indent=2)}")

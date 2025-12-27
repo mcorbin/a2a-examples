@@ -6,7 +6,7 @@ from strands.multiagent.a2a import A2AServer
 from strands_tools.a2a_client import A2AClientToolProvider
 from agents.otel import configure
 
-configure()
+configure("orchestrator")
 
 system_prompt = dedent("""
 You are an orchestrator agent that coordinates multiple specialized agents to complete software development tasks.
@@ -19,7 +19,7 @@ You have access to three specialized agents:
 Your workflow:
 1. When you receive a feature request, first call the architect agent to create an implementation plan
 2. Then call the developer agent with the plan to write the code
-3. Finally call the reviewer agent to review the code that was written
+3. Finally call the reviewer agent to review the code that was written (it needs the files names to review)
 4. Provide a complete summary to the user with all outputs
 
 Use the A2A tools to discover and communicate with these agents.

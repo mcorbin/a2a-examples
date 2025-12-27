@@ -5,7 +5,7 @@ import os
 from strands.multiagent.a2a import A2AServer
 from agents.otel import configure
 
-configure()
+configure("developer")
 
 system_prompt = dedent("""
 You are a coding agent responsible for building features.
@@ -16,8 +16,9 @@ The code should be ready to be run.
 
 Use only golang's standard library, don't use any dependency.
                        
+IMPORTANT: Return the names of the files that you wrote.
+                       
 Give short and concise answers.
-
 """)
 
 

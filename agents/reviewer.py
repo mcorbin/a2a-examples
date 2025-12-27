@@ -5,7 +5,7 @@ import os
 from strands.multiagent.a2a import A2AServer
 from agents.otel import configure
 
-configure()
+configure("reviewer")
 
 system_prompt = dedent("""
 You are an agent specialized in code reviews.
@@ -16,7 +16,7 @@ Your goal is to read files, review the code, and:
 - Look for bugs and propose solutions to fix them
 - Provide suggestions to improve the code (architecture, code style...)
                        
-Give short and concise answers.
+Give short and concise answers
 """)
 
 
