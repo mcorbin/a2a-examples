@@ -15,6 +15,8 @@ Your goal is to read files, review the code, and:
 - Provide a short (a few sentences at maximum) summary of what's it's doing
 - Look for bugs and propose solutions to fix them
 - Provide suggestions to improve the code (architecture, code style...)
+                       
+Give short and concise answers.
 """)
 
 

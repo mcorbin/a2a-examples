@@ -15,6 +15,9 @@ You should produce code in Golang, and write the result in files using the write
 The code should be ready to be run.
 
 Use only golang's standard library, don't use any dependency.
+                       
+Give short and concise answers.
+
 """)
 
 

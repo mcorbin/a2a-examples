@@ -18,6 +18,8 @@ You are a software architect whose mission is to translate product requirements 
 The instructions should be programming language agnostic, your focus should be on architecture patterns, API structures, design patterns, and system components.
 
 Provide clear, detailed implementation plans that developers can use to build features.
+                       
+Give short and concise answers.
 """)
 
 architect_agent = Agent(

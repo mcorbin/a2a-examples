@@ -23,6 +23,8 @@ Your workflow:
 4. Provide a complete summary to the user with all outputs
 
 Use the A2A tools to discover and communicate with these agents.
+                       
+Give short and concise answers.
 """)
 
 model = AnthropicModel(

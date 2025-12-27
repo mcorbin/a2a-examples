@@ -9,7 +9,6 @@ from a2a.client import A2ACardResolver
 from a2a.types import Part
 from agents.otel import configure
 
-configure()
 from opentelemetry import trace
 from agents.otel import configure
 
@@ -19,7 +18,7 @@ tracer = trace.get_tracer("main.py")
 
 
 async def run(instructions: str):
-    with tracer.start_as_current_span("run") as span:
+    with tracer.start_as_current_span("main_run") as span:
         async with httpx.AsyncClient(timeout=120) as httpx_client:
             # Configure A2A client for orchestrator
             resolver = A2ACardResolver(
@@ -63,11 +62,16 @@ async def run(instructions: str):
                                 else part.__dict__
                             )
 
+                            print(f"\n[DEBUG] Part data: {part_data}\n")
+
                             # Look for text in various possible locations
                             if isinstance(part_data, dict):
                                 # Check for direct text field
                                 if "text" in part_data and part_data["text"]:
                                     full_text_content.append(part_data["text"])
+                                    print(
+                                        f"[DEBUG] Added text from direct field: {part_data['text'][:50]}..."
+                                    )
                                 # Check for nested text_part
                                 elif (
                                     "text_part" in part_data
@@ -76,6 +80,13 @@ async def run(instructions: str):
                                 ):
                                     full_text_content.append(
                                         part_data["text_part"]["text"]
+                                    )
+                                    print(
+                                        f"[DEBUG] Added text from text_part: {part_data['text_part']['text'][:50]}..."
+                                    )
+                                else:
+                                    print(
+                                        f"[DEBUG] No text found in part_data keys: {list(part_data.keys())}"
                                     )
                 elif isinstance(event, tuple) and len(event) == 2:
                     task, update_event = event
